@@ -1,0 +1,12 @@
+Package: formula1data
+Type: Package
+Title: Imports Formula 1 data using the Ergast API
+Version: 0.1.0
+Author: Alex Kraieski
+Maintainer: Alex Kraieski <arkraieski@gmail.com>
+Description: This package imports Formula 1 data by querying the ERGAST api. It has functions for lap times, pit stops, race results, and championship standings
+License: MIT
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.1
+Imports: lubridate, dplyr, tidyr, httr, jsonlite
