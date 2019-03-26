@@ -19,7 +19,7 @@ getLapsByRace <- function(year, race){
 #' Get a dataframe of a specific driver's lap times in a Formula 1 Grand Prix
 #' @param year a four digit integer
 #' @param race a 1 or 2 digit integer indicating which round of the season
-#' @param driverId an Ergast driverId, usually the driver's name in all lowercase
+#' @param driverId an Ergast driverId, usually the driver's last name in all lowercase
 getDriverLaps <- function(year, race, driverId){
   url <- paste0("https://ergast.com/api/f1/", year, "/", race, "/drivers/", driverId, "/laps.json?limit=2000")
   laps <- GET(url)

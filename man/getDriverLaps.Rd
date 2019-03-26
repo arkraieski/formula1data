@@ -11,7 +11,7 @@ getDriverLaps(year, race, driverId)
 
 \item{race}{a 1 or 2 digit integer indicating which round of the season}
 
-\item{driverId}{an Ergast driverId, usually the driver's name in all lowercase}
+\item{driverId}{an Ergast driverId, usually the driver's last name in all lowercase}
 }
 \description{
 Get a dataframe of a specific driver's lap times in a Formula 1 Grand Prix
