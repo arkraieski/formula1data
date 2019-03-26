@@ -1,7 +1,11 @@
-# cmd check throws a note because of use of nonstandard evaluation, I think this can be ingnored
+# cmd check throws a note because of use of nonstandard evaluation, I think this can be ignored
 
-
-
+#' Get a dataframe of all lap times for a specific Formula 1 Grand Prix
+#' @param year a four digit integer
+#' @param race a 1 or 2 digit integer indicating which round of the season
+#'
+#' @examples
+#' aus_laps_2018 <- getLapsByRace(2018, 1)
 getLapsByRace <- function(year, race){
   url <- paste0("https://ergast.com/api/f1/", year, "/", race, "/laps.json?limit=2000")
   laps <- GET(url)
@@ -15,6 +19,13 @@ getLapsByRace <- function(year, race){
   laps
 }
 
+#' Get a dataframe of a specific driver's lap times in a Formula 1 Grand Prix
+#' @param year a four digit integer
+#' @param race a 1 or 2 digit integer indicating which round of the season
+#' @param driverId an Ergast driverId, usually the driver's name in all lowercase
+#'
+#' @examples
+#' getDriverLaps(2018, 1, vettel)
 getDriverLaps <- function(year, race, driverId){
   url <- paste0("https://ergast.com/api/f1/", year, "/", race, "/drivers/", driverId, "/laps.json?limit=2000")
   laps <- GET(url)
@@ -28,7 +39,12 @@ getDriverLaps <- function(year, race, driverId){
   laps
 }
 
-
+#' Get a dataframe of pit stops in a Formula 1 Grand Prix
+#' @param year a four digit integer
+#' @param race a 1 or 2 digit integer indicating which round of the season
+#'
+#' @examples
+#' aus_pitstops_2018 <- getPitStopsByRace(2018, 1)
 getPitStopsByRace <- function(year, race){
   url <- paste0("http://ergast.com/api/f1/", year, "/", race, "/pitstops.json?limit=100")
   pitstops <- fromJSON(content(GET(url), as = "text"))$MRData$RaceTable$Races$PitStops[[1]]
@@ -41,6 +57,13 @@ getPitStopsByRace <- function(year, race){
 
 # this function results in a dataframe with nested dataframe columns for Driver and Constructor
 # I am leaving the dataframe like this so that the user can clean and keep/discard data according to their needs
+
+#' Get a dataframe of race results for a Formula 1 Grand Prix
+#' @param year a four digit integer
+#' @param race a 1 or 2 digit integer indicating which round of the season
+#'
+#' @examples
+#' aus_results_2018 <- getRaceResults(2018, 1)
 getRaceResults <- function(year, race){
   url <- paste0("https://ergast.com/api/f1/", year, "/", race, "/results.json$limit=50")
   results <- fromJSON(content(GET(url), as = "text"))$MRData$RaceTable$Races$Results[[1]]
@@ -52,7 +75,12 @@ getRaceResults <- function(year, race){
   results
 }
 
-
+#' Get a dataframe of qualifying results for a Formula 1 Grand Prix
+#' @param year a four digit integer
+#' @param race a 1 or 2 digit integer indicating which round of the season
+#'
+#' @examples
+#' aus_qualy_2018 <- getQualifyingResults(2018, 1)
 getQualifyingResults <- function(year, race){
   url <- paste0("http://ergast.com/api/f1/", year, "/", race, "/qualifying.json$limit=100")
   qualy <- fromJSON(content(GET(url), as = "text"))$MRData$RaceTable$Races$Qualifying[[1]]
@@ -81,7 +109,13 @@ getQualifyingResults <- function(year, race){
 }
 
 
-
+#' Get a dataframe of Formula 1 World Championship final standings for a season
+#' @param year a four digit integer
+#' @param type constructor or driver
+#'
+#' @examples
+#' getFinalStandings(2018, type = 'driver')
+#' getFinalStandings(2018, type = 'constructor')
 getFinalF1Standings <- function(year, type = "driver"){
   if(type == "driver"){
     url <- paste0("http://ergast.com/api/f1/", year,"/driverStandings.json?limit=100")
@@ -115,6 +149,14 @@ getFinalF1Standings <- function(year, type = "driver"){
 
 }
 
+#' Get a dataframe of Formula 1 World Championship standings after a specific race
+#' @param year a four digit integer
+#' @param race a 1 or 2 digit integer indicating which round of the season
+#' @param type constructor or driver
+#'
+#' @examples
+#' getF1StandingsAfterRace(2018, 1, type = 'driver')
+#' getF1StandingsAfterRace(2018, 1, type = 'constructor')
 getF1StandingsAfterRace <- function(year, race, type = "driver"){
   if(type == "driver"){
     url <- paste0("http://ergast.com/api/f1/", year,"/", race, "/driverStandings.json?limit=100")
