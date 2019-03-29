@@ -14,3 +14,6 @@ getLapsByRace(year, race)
 \description{
 Get a dataframe of all lap times for a specific Formula 1 Grand Prix
 }
+\examples{
+aus_laps_2018 <- getLapsByRace(2018, 1)
+}

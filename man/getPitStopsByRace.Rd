@@ -14,3 +14,6 @@ getPitStopsByRace(year, race)
 \description{
 Get a dataframe of pit stops in a Formula 1 Grand Prix
 }
+\examples{
+aus_pitstops_2018 <- getPitStopsByRace(2018, 1)
+}

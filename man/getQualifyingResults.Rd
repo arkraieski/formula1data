@@ -14,3 +14,6 @@ getQualifyingResults(year, race)
 \description{
 Get a dataframe of qualifying results for a Formula 1 Grand Prix
 }
+\examples{
+aus_qualy_2018 <- getQualifyingResults(2018, 1)
+}
