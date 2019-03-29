@@ -15,5 +15,5 @@ getRaceResults(year, race)
 Get a dataframe of race results for a Formula 1 Grand Prix
 }
 \examples{
-aus_results_2018 <- getRaceResults(2018, 1)
+\donttest{aus_results_2018 <- getRaceResults(2018, 1)}
 }

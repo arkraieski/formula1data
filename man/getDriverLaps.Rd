@@ -17,5 +17,5 @@ getDriverLaps(year, race, driverId)
 Get a dataframe of a specific driver's lap times in a Formula 1 Grand Prix
 }
 \examples{
-vettel_laps_aus_2011 <- getDriverLaps(2011, 1, driverId = "vettel")
+\donttest{vettel_laps_aus_2011 <- getDriverLaps(2011, 1, driverId = "vettel")}
 }

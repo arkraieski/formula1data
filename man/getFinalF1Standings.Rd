@@ -15,6 +15,6 @@ getFinalF1Standings(year, type = "driver")
 Get a dataframe of Formula 1 World Championship final standings for a season
 }
 \examples{
-driver_standings_2012 <- getFinalF1Standings(2012, type = "driver")
-constructor_standings_2012 <- getFinalF1Standings(2012, type = "constructor")
+\donttest{driver_standings_2012 <- getFinalF1Standings(2012, type = "driver")
+constructor_standings_2012 <- getFinalF1Standings(2012, type = "constructor")}
 }

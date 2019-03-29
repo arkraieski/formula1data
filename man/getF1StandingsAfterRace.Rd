@@ -17,5 +17,5 @@ getF1StandingsAfterRace(year, race, type = "driver")
 Get a dataframe of Formula 1 World Championship standings after a specific race
 }
 \examples{
-round2_driver_standings_2012 <- getF1StandingsAfterRace(2012, 2, type = "driver")
+\donttest{round2_driver_standings_2012 <- getF1StandingsAfterRace(2012, 2, type = "driver")}
 }
