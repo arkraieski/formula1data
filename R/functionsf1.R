@@ -8,7 +8,7 @@ getLapsByRace <- function(year, race){
   laps <- GET(url)
   laps <- fromJSON(content(laps, as = "text"))$MRData$RaceTable$Races$Laps[[1]]
   laps <- unnest(laps, .data$Timings) %>%
-    mutate(.data$lap = as.integer(.data$number), .data$position = as.integer(.data$position)) %>%
+    mutate(lap = as.integer(.data$number), position = as.integer(.data$position)) %>%
     select(-.data$number)
 
   laps$time <- ms(laps$time)
@@ -25,7 +25,7 @@ getDriverLaps <- function(year, race, driverId){
   laps <- GET(url)
   laps <- fromJSON(content(laps, as = "text"))$MRData$RaceTable$Races$Laps[[1]]
   laps <- unnest(laps, .data$Timings) %>%
-    mutate(.data$lap = as.integer(.data$number), .data$position = as.integer(.data$position)) %>%
+    mutate(lap = as.integer(.data$number), position = as.integer(.data$position)) %>%
     select(-.data$number)
 
   laps$time <- ms(laps$time)
@@ -40,8 +40,8 @@ getPitStopsByRace <- function(year, race){
   url <- paste0("http://ergast.com/api/f1/", year, "/", race, "/pitstops.json?limit=100")
   pitstops <- fromJSON(content(GET(url), as = "text"))$MRData$RaceTable$Races$PitStops[[1]]
   pitstops <- pitstops %>%
-    mutate(.data$time = hms(.data$time),
-           .data$duration = as.numeric(.data$duration))
+    mutate(time = hms(.data$time),
+           duration = as.numeric(.data$duration))
   pitstops
 }
 
@@ -77,8 +77,8 @@ getQualifyingResults <- function(year, race){
   qualy$Constructor <- qualy$Constructor$constructorId
 
   # fix names in columns that came from nested data
-  qualy <- qualy %>% rename(.data$driverId = .data$Driver,
-                            .data$constructorId = .data$Constructor)
+  qualy <- qualy %>% rename(driverId = .data$Driver,
+                            constructorId = .data$Constructor)
 
   char_ms_to_seconds <- function(x){
     time <- ms(x)
@@ -108,7 +108,7 @@ getFinalF1Standings <- function(year, type = "driver"){
     standings$constructorId <- standings$Constructors$constructorId
 
     # remove nested df columns
-    standings <- standings %>% select(-Driver, -Constructors, -positionText) %>%
+    standings <- standings %>% select(-.data$Driver, -.data$Constructors, -.data$positionText) %>%
       mutate_at(c("position", "points", "wins"), .funs = as.integer) # convert appropriate columns to type integer
     standings
   }
