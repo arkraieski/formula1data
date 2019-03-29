@@ -57,7 +57,7 @@ getPitStopsByRace <- function(year, race){
 #' @param race a 1 or 2 digit integer indicating which round of the season
 #' @examples aus_results_2018 <- getRaceResults(2018, 1)
 getRaceResults <- function(year, race){
-  url <- paste0("https://ergast.com/api/f1/", year, "/", race, "/results.json$limit=50")
+  url <- paste0("https://ergast.com/api/f1/", year, "/", race, "/results.json?limit=50")
   results <- fromJSON(content(GET(url), as = "text"))$MRData$RaceTable$Races$Results[[1]]
 
   # convert appropriate columns to integer
@@ -72,7 +72,7 @@ getRaceResults <- function(year, race){
 #' @param race a 1 or 2 digit integer indicating which round of the season
 #' @examples aus_qualy_2018 <- getQualifyingResults(2018, 1)
 getQualifyingResults <- function(year, race){
-  url <- paste0("http://ergast.com/api/f1/", year, "/", race, "/qualifying.json$limit=100")
+  url <- paste0("http://ergast.com/api/f1/", year, "/", race, "/qualifying.json?limit=100")
   qualy <- fromJSON(content(GET(url), as = "text"))$MRData$RaceTable$Races$Qualifying[[1]]
 
   # get rid of nested driver column, replace with driverId
