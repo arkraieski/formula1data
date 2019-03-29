@@ -87,7 +87,7 @@ getQualifyingResults <- function(year, race){
 
   qualy <- qualy %>%
     select(-.data$number) %>%
-    mutate($position = as.integer(.data$position),
+    mutate(position = as.integer(.data$position),
            Q1 = char_ms_to_seconds(.data$Q1),
            Q2 = char_ms_to_seconds(.data$Q2),
            Q3 = char_ms_to_seconds(.data$Q3))
