@@ -3,7 +3,7 @@
 #' Get a dataframe of all lap times for a specific Formula 1 Grand Prix
 #' @param year a four digit integer
 #' @param race a 1 or 2 digit integer indicating which round of the season
-#' @examples aus_laps_2018 <- getLapsByRace(2018, 1)
+#' @examples \donttest{aus_laps_2018 <- getLapsByRace(2018, 1)}
 getLapsByRace <- function(year, race){
   url <- paste0("https://ergast.com/api/f1/", year, "/", race, "/laps.json?limit=2000")
   laps <- GET(url)
@@ -21,7 +21,7 @@ getLapsByRace <- function(year, race){
 #' @param year a four digit integer
 #' @param race a 1 or 2 digit integer indicating which round of the season
 #' @param driverId an Ergast driverId, usually the driver's last name in all lowercase
-#' @examples vettel_laps_aus_2011 <- getDriverLaps(2011, 1, driverId = "vettel")
+#' @examples \donttest{vettel_laps_aus_2011 <- getDriverLaps(2011, 1, driverId = "vettel")}
 getDriverLaps <- function(year, race, driverId){
   url <- paste0("https://ergast.com/api/f1/", year, "/", race, "/drivers/", driverId, "/laps.json?limit=2000")
   laps <- GET(url)
@@ -38,7 +38,7 @@ getDriverLaps <- function(year, race, driverId){
 #' Get a dataframe of pit stops in a Formula 1 Grand Prix
 #' @param year a four digit integer
 #' @param race a 1 or 2 digit integer indicating which round of the season
-#' @examples aus_pitstops_2018 <- getPitStopsByRace(2018, 1)
+#' @examples \donttest{aus_pitstops_2018 <- getPitStopsByRace(2018, 1)}
 getPitStopsByRace <- function(year, race){
   url <- paste0("http://ergast.com/api/f1/", year, "/", race, "/pitstops.json?limit=100")
   pitstops <- fromJSON(content(GET(url), as = "text"))$MRData$RaceTable$Races$PitStops[[1]]
@@ -55,7 +55,7 @@ getPitStopsByRace <- function(year, race){
 #' Get a dataframe of race results for a Formula 1 Grand Prix
 #' @param year a four digit integer
 #' @param race a 1 or 2 digit integer indicating which round of the season
-#' @examples aus_results_2018 <- getRaceResults(2018, 1)
+#' @examples \donttest{aus_results_2018 <- getRaceResults(2018, 1)}
 getRaceResults <- function(year, race){
   url <- paste0("https://ergast.com/api/f1/", year, "/", race, "/results.json?limit=50")
   results <- fromJSON(content(GET(url), as = "text"))$MRData$RaceTable$Races$Results[[1]]
@@ -70,7 +70,7 @@ getRaceResults <- function(year, race){
 #' Get a dataframe of qualifying results for a Formula 1 Grand Prix
 #' @param year a four digit integer
 #' @param race a 1 or 2 digit integer indicating which round of the season
-#' @examples aus_qualy_2018 <- getQualifyingResults(2018, 1)
+#' @examples \donttest{aus_qualy_2018 <- getQualifyingResults(2018, 1)}
 getQualifyingResults <- function(year, race){
   url <- paste0("http://ergast.com/api/f1/", year, "/", race, "/qualifying.json?limit=100")
   qualy <- fromJSON(content(GET(url), as = "text"))$MRData$RaceTable$Races$Qualifying[[1]]
@@ -103,8 +103,8 @@ getQualifyingResults <- function(year, race){
 #' @param year a four digit integer
 #' @param type constructor or driver
 #' @examples
-#' driver_standings_2012 <- getFinalF1Standings(2012, type = "driver")
-#' constructor_standings_2012 <- getFinalF1Standings(2012, type = "constructor")
+#' \donttest{driver_standings_2012 <- getFinalF1Standings(2012, type = "driver")
+#' constructor_standings_2012 <- getFinalF1Standings(2012, type = "constructor")}
 getFinalF1Standings <- function(year, type = "driver"){
   if(type == "driver"){
     url <- paste0("http://ergast.com/api/f1/", year,"/driverStandings.json?limit=100")
@@ -143,7 +143,7 @@ getFinalF1Standings <- function(year, type = "driver"){
 #' @param race a 1 or 2 digit integer indicating which round of the season
 #' @param type constructor or driver
 #' @examples
-#' round2_driver_standings_2012 <- getF1StandingsAfterRace(2012, 2, type = "driver")
+#' \donttest{round2_driver_standings_2012 <- getF1StandingsAfterRace(2012, 2, type = "driver")}
 getF1StandingsAfterRace <- function(year, race, type = "driver"){
   if(type == "driver"){
     url <- paste0("http://ergast.com/api/f1/", year,"/", race, "/driverStandings.json?limit=100")
