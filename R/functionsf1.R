@@ -145,7 +145,7 @@ getF1StandingsAfterRace <- function(year, race, type = "driver"){
     standings$constructorId <- standings$Constructors$constructorId
 
     # remove nested df columns
-    standings <- standings %>% select(-Driver, -Constructors, -positionText) %>%
+    standings <- standings %>% select(-.data$Driver, -.data$Constructors, -.data$positionText) %>%
       mutate_at(c("position", "points", "wins"), .funs = as.integer) # convert appropriate columns to type integer
     standings
   }
