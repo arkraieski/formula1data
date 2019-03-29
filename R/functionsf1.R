@@ -1,4 +1,4 @@
-# cmd check throws a note because of use of nonstandard evaluation, I think this can be ignored
+
 
 #' Get a dataframe of all lap times for a specific Formula 1 Grand Prix
 #' @param year a four digit integer
