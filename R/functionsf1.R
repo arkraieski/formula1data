@@ -7,9 +7,9 @@ getLapsByRace <- function(year, race){
   url <- paste0("https://ergast.com/api/f1/", year, "/", race, "/laps.json?limit=2000")
   laps <- GET(url)
   laps <- fromJSON(content(laps, as = "text"))$MRData$RaceTable$Races$Laps[[1]]
-  laps <- unnest(laps, Timings) %>%
-    mutate(lap = as.integer(number), position = as.integer(position)) %>%
-    select(-number)
+  laps <- unnest(laps, .data$Timings) %>%
+    mutate(.data$lap = as.integer(.data$number), .data$position = as.integer(.data$position)) %>%
+    select(-.data$number)
 
   laps$time <- ms(laps$time)
   laps$seconds <- 60*minute(laps$time) + second(laps$time)
@@ -24,9 +24,9 @@ getDriverLaps <- function(year, race, driverId){
   url <- paste0("https://ergast.com/api/f1/", year, "/", race, "/drivers/", driverId, "/laps.json?limit=2000")
   laps <- GET(url)
   laps <- fromJSON(content(laps, as = "text"))$MRData$RaceTable$Races$Laps[[1]]
-  laps <- unnest(laps, Timings) %>%
-    mutate(lap = as.integer(number), position = as.integer(position)) %>%
-    select(-number)
+  laps <- unnest(laps, .data$Timings) %>%
+    mutate(.data$lap = as.integer(.data$number), .data$position = as.integer(.data$position)) %>%
+    select(-.data$number)
 
   laps$time <- ms(laps$time)
   laps$seconds <- 60*minute(laps$time) + second(laps$time)
@@ -40,8 +40,8 @@ getPitStopsByRace <- function(year, race){
   url <- paste0("http://ergast.com/api/f1/", year, "/", race, "/pitstops.json?limit=100")
   pitstops <- fromJSON(content(GET(url), as = "text"))$MRData$RaceTable$Races$PitStops[[1]]
   pitstops <- pitstops %>%
-    mutate(time = hms(time),
-           duration = as.numeric(duration))
+    mutate(.data$time = hms(.data$time),
+           .data$duration = as.numeric(.data$duration))
   pitstops
 }
 
@@ -77,8 +77,8 @@ getQualifyingResults <- function(year, race){
   qualy$Constructor <- qualy$Constructor$constructorId
 
   # fix names in columns that came from nested data
-  qualy <- qualy %>% rename(driverId = Driver,
-                            constructorId = Constructor)
+  qualy <- qualy %>% rename(.data$driverId = .data$Driver,
+                            .data$constructorId = .data$Constructor)
 
   char_ms_to_seconds <- function(x){
     time <- ms(x)
@@ -86,11 +86,11 @@ getQualifyingResults <- function(year, race){
     seconds}
 
   qualy <- qualy %>%
-    select(-number) %>%
-    mutate(position = as.integer(position),
-           Q1 = char_ms_to_seconds(Q1),
-           Q2 = char_ms_to_seconds(Q2),
-           Q3 = char_ms_to_seconds(Q3))
+    select(-.data$number) %>%
+    mutate(.data$position = as.integer(.data$position),
+           .data$Q1 = char_ms_to_seconds(.data$Q1),
+           .data$Q2 = char_ms_to_seconds(.data$Q2),
+           .data$Q3 = char_ms_to_seconds(.data$Q3))
   qualy
 }
 
@@ -120,7 +120,7 @@ getFinalF1Standings <- function(year, type = "driver"){
     standings$constructorId <- standings$Constructor$constructorId
 
     standings <- standings %>%
-      select(-Constructor, -positionText) %>%
+      select(-.data$Constructor, -.data$positionText) %>%
       mutate_at(c("position", "points", "wins"), .funs = as.integer)
     standings
 
@@ -157,7 +157,7 @@ getF1StandingsAfterRace <- function(year, race, type = "driver"){
     standings$constructorId <- standings$Constructor$constructorId
 
     standings <- standings %>%
-      select(-Constructor, -positionText) %>%
+      select(-.data$Constructor, -.data$positionText) %>%
       mutate_at(c("position", "points", "wins"), .funs = as.integer)
     standings
 
