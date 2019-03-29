@@ -1,6 +1,6 @@
 Package: formula1data
 Type: Package
-Title: Imports Formula 1 data using the Ergast API
+Title: Imports Formula 1 Data using the Ergast API
 Version: 0.1.0
 Author: Alex Kraieski
 Maintainer: Alex Kraieski <arkraieski@gmail.com>
