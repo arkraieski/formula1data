@@ -7,8 +7,9 @@ I have had a ton of fun playing with these datasets, so I wanted to make it easy
 
 Thank you to Ergast for providing such an awesome API! I am not affiliated with Ergast. Please read [Ergast's terms and conditions](https://ergast.com/mrd/terms/) and make sure you do not use the package in a manner that violates these terms and conditions.
 
-The package can be installed as follows:
-install.packages("devtools")
-library(devtools)
-install_github("arkraieski/formula1data")
+The package can be installed in R as follows:
+
+    install.packages("devtools")
+    library(devtools)
+    install_github("arkraieski/formula1data")
 
