@@ -5,10 +5,18 @@
 #' @param race a 1 or 2 digit integer indicating which round of the season
 #' @examples \donttest{aus_laps_2018 <- getLapsByRace(2018, 1)}
 getLapsByRace <- function(year, race){
-  url <- paste0("https://ergast.com/api/f1/", year, "/", race, "/laps.json?limit=2000")
-  laps <- GET(url)
-  laps <- fromJSON(content(laps, as = "text"))$MRData$RaceTable$Races$Laps[[1]]
-  laps <- unnest(laps, .data$Timings) %>%
+  url1 <- paste0("https://ergast.com/api/f1/", year, "/", race, "/laps.json")
+  laps1 <- GET(url1)
+  laps1 <- fromJSON(content(laps1, as = "text"))
+  limit <- as.integer(laps1$MRData$total) - 30 # this is used to determine how many records to request in second api call
+  laps1 <- laps1$MRData$RaceTable$Races$Laps[[1]]
+
+
+  url2 <- paste0("https://ergast.com/api/f1/", year, "/", race, "/laps.json?offset=30&limit=", limit)
+  laps2 <- GET(url2)
+  laps2 <- fromJSON(content(laps2, as = "text"))$MRData$RaceTable$Races$Laps[[1]]
+
+  laps <- bind_rows(laps1, laps2) %>% unnest(.data$Timings) %>%
     mutate(lap = as.integer(.data$number), position = as.integer(.data$position)) %>%
     select(-.data$number)
 
@@ -20,13 +28,21 @@ getLapsByRace <- function(year, race){
 #' Get a dataframe of a specific driver's lap times in a Formula 1 Grand Prix
 #' @param year a four digit integer
 #' @param race a 1 or 2 digit integer indicating which round of the season
-#' @param driverId an 'Ergast' driverId, usually the driver's last name in all lowercase
+#' @param driverId string containing an 'Ergast' driverId, usually the driver's last name in all lowercase
 #' @examples \donttest{vettel_laps_aus_2011 <- getDriverLaps(2011, 1, driverId = "vettel")}
 getDriverLaps <- function(year, race, driverId){
-  url <- paste0("https://ergast.com/api/f1/", year, "/", race, "/drivers/", driverId, "/laps.json?limit=1000")
-  laps <- GET(url)
-  laps <- fromJSON(content(laps, as = "text"))$MRData$RaceTable$Races$Laps[[1]]
-  laps <- unnest(laps, .data$Timings) %>%
+  url1 <- paste0("https://ergast.com/api/f1/", year, "/", race, "/drivers/", driverId, "/laps.json")
+  laps1 <- GET(url1)
+  laps1 <- fromJSON(content(laps1, as = "text"))
+  limit <- as.integer(laps1$MRData$total) - 30
+  laps1 <- laps1$MRData$RaceTable$Races$Laps[[1]]
+
+  url2 <-paste0("https://ergast.com/api/f1/", year, "/", race, "/drivers/", driverId, "/laps.json?offset=30&limit=", limit)
+  laps2 <- GET(url2)
+  laps2 <- fromJSON(content(laps2, as = "text"))$MRData$RaceTable$Races$Laps[[1]]
+
+  laps <- bind_rows(laps1, laps2) %>%
+    unnest(.data$Timings) %>%
     mutate(lap = as.integer(.data$number), position = as.integer(.data$position)) %>%
     select(-.data$number)
 
@@ -40,7 +56,7 @@ getDriverLaps <- function(year, race, driverId){
 #' @param race a 1 or 2 digit integer indicating which round of the season
 #' @examples \donttest{aus_pitstops_2018 <- getPitStopsByRace(2018, 1)}
 getPitStopsByRace <- function(year, race){
-  url <- paste0("http://ergast.com/api/f1/", year, "/", race, "/pitstops.json?limit=75")
+  url <- paste0("http://ergast.com/api/f1/", year, "/", race, "/pitstops.json?limit=100")
   pitstops <- fromJSON(content(GET(url), as = "text"))$MRData$RaceTable$Races$PitStops[[1]]
   pitstops <- pitstops %>%
     mutate(time = hms(.data$time),
