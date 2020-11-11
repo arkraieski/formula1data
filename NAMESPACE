@@ -4,4 +4,7 @@ importFrom(lubridate, ms, minute, second, hms)
 importFrom(jsonlite, fromJSON)
 import(dplyr)
 importFrom(tidyr, unnest)
-importFrom(rlang, .data)
+importFrom(rlang, .data, caller_env)
+import(DBI)
+importFrom("utils", "download.file", "read.csv", "unzip")
+
