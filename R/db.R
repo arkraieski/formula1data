@@ -1,15 +1,27 @@
 #' Create a "SQLite" F1 database
-#' Create a local 'SQLite' database using the latest 'Ergast' data and establish a connection
+#' Creates a local 'SQLite' database using the latest 'Ergast' data and establish a connection.
 #' @param csv_dir either NULL or the name of a directory containing csv files from Ergast.
 #' If NULL, the files will be downloaded and placed in a directory within the working directory named "/f1db_csv"
 #' @param rm_csv logical indicating whether the csv directory should be deleted after initializing the database
-#' @details create_F1_db() creates a local 'SQLite' database using csv files downloaded from Ergast.
-#' The database will be located in a file "f1_db.sqlite" within the working directory.
-#' @return a 'DBI' connection object
-create_F1_db <- function(csv_dir = NULL, rm_csv = FALSE){
-   if(file.exists(paste0(getwd(), "/f1_db.sqlite"))){
-     stop("There is already an F1 database within the working directory")
+#' @param overwrite logical; should a new database replace an existing one?
+#' @details \code{createF1db()} creates a local 'SQLite' database using csv files downloaded from Ergast.
+#' The database will be located in a file 'f1_db.sqlite' within the working directory.
+#'
+#' Databases created with this function can be interacted with using functions from the 'DBI' Package. You can also use the convenience function \code{\link{F1dbConnect}} to reconnect to a database created by \code{createF1db}
+#' @return an object of class \code{\link[RSQLite:SQLiteConnection-class]{SQLiteConnection}}
+#' @examples \donttest{
+#' library(DBI)
+#' con <- createF1db()
+#' dbListTables(con)
+#' dbDisconnect(con)
+#' }
+createF1db <- function(csv_dir = NULL, rm_csv = FALSE, overwrite = FALSE){
+   if(file.exists(paste0(getwd(), "/f1_db.sqlite")) & overwrite == FALSE){
+     stop("There is already an F1 database within the working directory", call. = FALSE)
    }
+  if(overwrite == TRUE){
+    file.rename("f1_db.sqlite", "backup.f1_db.sqlite")
+  }
 
   if(is.null(csv_dir)){
   zipdest <- paste0(getwd(), "/f1db_csv.zip")
@@ -59,7 +71,8 @@ create_F1_db <- function(csv_dir = NULL, rm_csv = FALSE){
                         colClasses = c(rep("integer", 4), "character", "character", "integer"))
   write_table(con, tbl = pit_stops)
   qualifying <- read.csv(paste0(csv_dir, "/qualifying.csv"),
-                         colClasses = c(rep("integer", 6), rep("character", 3)))
+                         colClasses = c(rep("integer", 6), rep("character", 3)),
+                         na.strings = "\\N")
   write_table(con, tbl = qualifying)
   races <- read.csv(paste0(csv_dir, "/races.csv"),
                     colClasses = c(rep("integer", 4), "character", "character", "character", "character"))
@@ -88,4 +101,21 @@ create_F1_db <- function(csv_dir = NULL, rm_csv = FALSE){
   con
 
 
+}
+
+#' Connect to an existing F1 SQLite database
+#' Establishes a connection to a SQLite database previously created by \code{\link{createF1db}}.
+#' @param file path to the database file
+#' @return an object of class \code{\link[RSQLite:SQLiteConnection-class]{SQLiteConnection}}
+#' @examples \donttest{
+#' # a file "f1_db.sqlite" already exists in the working directory
+#' con <- F1dbConnect()
+#' dbListFields(con)
+#' circuits <- dbReadTable(con, "circuits")
+#' }
+F1dbConnect <- function(file = "f1_db.sqlite"){
+  if(!file.exists(file)){
+    stop(paste0("Database file ", file, " not found"), call. = FALSE)
+  }
+  dbConnect(RSQLite::SQLite(), file)
 }
