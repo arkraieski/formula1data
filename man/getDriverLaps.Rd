@@ -2,7 +2,7 @@
 % Please edit documentation in R/functionsf1.R
 \name{getDriverLaps}
 \alias{getDriverLaps}
-\title{Get a dataframe of a specific driver's lap times in a Formula 1 Grand Prix}
+\title{Get a data.frame of a specific driver's lap times in a Formula 1 Grand Prix}
 \usage{
 getDriverLaps(year, race, driverId)
 }
@@ -14,7 +14,7 @@ getDriverLaps(year, race, driverId)
 \item{driverId}{string containing an 'Ergast' driverId, usually the driver's last name in all lowercase}
 }
 \description{
-Get a dataframe of a specific driver's lap times in a Formula 1 Grand Prix
+Get a data.frame of a specific driver's lap times in a Formula 1 Grand Prix
 }
 \examples{
 \donttest{vettel_laps_aus_2011 <- getDriverLaps(2011, 1, driverId = "vettel")}

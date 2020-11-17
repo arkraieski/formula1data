@@ -1,6 +1,6 @@
 exportPattern("^[[:alpha:]]+")
 importFrom(httr, GET, content)
-importFrom(lubridate, ms, minute, second, hms)
+importFrom(lubridate, ms, minute, second, hms, ymd_hms)
 importFrom(jsonlite, fromJSON)
 import(dplyr)
 importFrom(tidyr, unnest)

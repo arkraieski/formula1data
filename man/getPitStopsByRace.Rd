@@ -2,7 +2,7 @@
 % Please edit documentation in R/functionsf1.R
 \name{getPitStopsByRace}
 \alias{getPitStopsByRace}
-\title{Get a dataframe of pit stops in a Formula 1 Grand Prix}
+\title{Get a data.frame of pit stops in a Formula 1 Grand Prix}
 \usage{
 getPitStopsByRace(year, race)
 }
@@ -12,7 +12,7 @@ getPitStopsByRace(year, race)
 \item{race}{a 1 or 2 digit integer indicating which round of the season}
 }
 \description{
-Get a dataframe of pit stops in a Formula 1 Grand Prix
+Get a data.frame of pit stops in a Formula 1 Grand Prix
 }
 \examples{
 \donttest{aus_pitstops_2018 <- getPitStopsByRace(2018, 1)}

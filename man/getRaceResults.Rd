@@ -2,7 +2,7 @@
 % Please edit documentation in R/functionsf1.R
 \name{getRaceResults}
 \alias{getRaceResults}
-\title{Get a dataframe of race results for a Formula 1 Grand Prix}
+\title{Get a data.frame of race results for a Formula 1 Grand Prix}
 \usage{
 getRaceResults(year, race)
 }
@@ -12,7 +12,7 @@ getRaceResults(year, race)
 \item{race}{a 1 or 2 digit integer indicating which round of the season}
 }
 \description{
-Get a dataframe of race results for a Formula 1 Grand Prix
+Get a data.frame of race results for a Formula 1 Grand Prix
 }
 \examples{
 \donttest{aus_results_2018 <- getRaceResults(2018, 1)}

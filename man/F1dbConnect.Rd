@@ -21,6 +21,7 @@ Establishes a connection to a SQLite database previously created by \code{\link{
 \donttest{
 # a file "f1_db.sqlite" already exists in the working directory
 con <- F1dbConnect()
+dbListFields(con)
 circuits <- dbReadTable(con, "circuits")
 }
 }

@@ -23,7 +23,7 @@ Create a "SQLite" F1 database
 Creates a local 'SQLite' database using the latest 'Ergast' data and establish a connection.
 }
 \details{
-\code{creatF1db()} creates a local 'SQLite' database using csv files downloaded from Ergast.
+\code{createF1db()} creates a local 'SQLite' database using csv files downloaded from Ergast.
 The database will be located in a file 'f1_db.sqlite' within the working directory.
 
 Databases created with this function can be interacted with using functions from the 'DBI' Package. You can also use the convenience function \code{\link{F1dbConnect}} to reconnect to a database created by \code{createF1db}
@@ -32,7 +32,7 @@ Databases created with this function can be interacted with using functions from
 \donttest{
 library(DBI)
 con <- createF1db()
-circuits <- dbReadTable(con, "circuits")
+dbListTables(con)
 dbDisconnect(con)
 }
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/functionsf1.R
 \name{getFinalF1Standings}
 \alias{getFinalF1Standings}
-\title{Get a dataframe of Formula 1 World Championship final standings for a season}
+\title{Get a data.frame of Formula 1 World Championship final standings for a season}
 \usage{
 getFinalF1Standings(year, type = "driver")
 }
@@ -12,7 +12,7 @@ getFinalF1Standings(year, type = "driver")
 \item{type}{constructor or driver}
 }
 \description{
-Get a dataframe of Formula 1 World Championship final standings for a season
+Get a data.frame of Formula 1 World Championship final standings for a season
 }
 \examples{
 \donttest{driver_standings_2012 <- getFinalF1Standings(2012, type = "driver")

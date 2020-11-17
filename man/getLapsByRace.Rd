@@ -2,7 +2,7 @@
 % Please edit documentation in R/functionsf1.R
 \name{getLapsByRace}
 \alias{getLapsByRace}
-\title{Get a dataframe of all lap times for a specific Formula 1 Grand Prix}
+\title{Get a data.frame of all lap times for a specific Formula 1 Grand Prix}
 \usage{
 getLapsByRace(year, race)
 }
@@ -12,7 +12,7 @@ getLapsByRace(year, race)
 \item{race}{a 1 or 2 digit integer indicating which round of the season}
 }
 \description{
-Get a dataframe of all lap times for a specific Formula 1 Grand Prix
+Get a data.frame of all lap times for a specific Formula 1 Grand Prix
 }
 \examples{
 \donttest{aus_laps_2018 <- getLapsByRace(2018, 1)}

@@ -1,6 +1,6 @@
 
 
-#' Get a dataframe of all lap times for a specific Formula 1 Grand Prix
+#' Get a data.frame of all lap times for a specific Formula 1 Grand Prix
 #' @param year a four digit integer
 #' @param race a 1 or 2 digit integer indicating which round of the season
 #' @examples \donttest{aus_laps_2018 <- getLapsByRace(2018, 1)}
@@ -25,7 +25,7 @@ getLapsByRace <- function(year, race){
   laps
 }
 
-#' Get a dataframe of a specific driver's lap times in a Formula 1 Grand Prix
+#' Get a data.frame of a specific driver's lap times in a Formula 1 Grand Prix
 #' @param year a four digit integer
 #' @param race a 1 or 2 digit integer indicating which round of the season
 #' @param driverId string containing an 'Ergast' driverId, usually the driver's last name in all lowercase
@@ -51,7 +51,7 @@ getDriverLaps <- function(year, race, driverId){
   laps
 }
 
-#' Get a dataframe of pit stops in a Formula 1 Grand Prix
+#' Get a data.frame of pit stops in a Formula 1 Grand Prix
 #' @param year a four digit integer
 #' @param race a 1 or 2 digit integer indicating which round of the season
 #' @examples \donttest{aus_pitstops_2018 <- getPitStopsByRace(2018, 1)}
@@ -69,7 +69,7 @@ getPitStopsByRace <- function(year, race){
 # this function results in a dataframe with nested dataframe columns for Driver and Constructor
 # I am leaving the dataframe like this so that the user can clean and keep/discard data according to their needs
 
-#' Get a dataframe of race results for a Formula 1 Grand Prix
+#' Get a data.frame of race results for a Formula 1 Grand Prix
 #' @param year a four digit integer
 #' @param race a 1 or 2 digit integer indicating which round of the season
 #' @examples \donttest{aus_results_2018 <- getRaceResults(2018, 1)}
@@ -84,7 +84,7 @@ getRaceResults <- function(year, race){
   results
 }
 
-#' Get a dataframe of qualifying results for a Formula 1 Grand Prix
+#' Get a data.frame of qualifying results for a Formula 1 Grand Prix
 #' @param year a four digit integer
 #' @param race a 1 or 2 digit integer indicating which round of the season
 #' @examples \donttest{aus_qualy_2018 <- getQualifyingResults(2018, 1)}
@@ -116,7 +116,7 @@ getQualifyingResults <- function(year, race){
 }
 
 
-#' Get a dataframe of Formula 1 World Championship final standings for a season
+#' Get a data.frame of Formula 1 World Championship final standings for a season
 #' @param year a four digit integer
 #' @param type constructor or driver
 #' @examples
@@ -155,7 +155,7 @@ getFinalF1Standings <- function(year, type = "driver"){
 
 }
 
-#' Get a dataframe of Formula 1 World Championship standings after a specific race
+#' Get a data.frame of Formula 1 World Championship standings after a specific race
 #' @param year a four digit integer
 #' @param race a 1 or 2 digit integer indicating which round of the season
 #' @param type constructor or driver
@@ -191,5 +191,22 @@ getF1StandingsAfterRace <- function(year, race, type = "driver"){
   else {
     stop("type must be either 'driver' or 'constructor'", call. = FALSE)
   }
+
+}
+
+#' Get a data.frame of the Formula 1 schedule for a given year
+#' @param year a four digit integer or "current"
+#' @examples \donttest{
+#' schedule_2019 <- getF1Schedule(2020)
+#' }
+getF1Schedule <- function(year){
+  url <- paste0("https://ergast.com/api/f1/", year, ".json")
+  sched <- fromJSON(content(GET(url), as = "text"))$MRData$RaceTable$Races
+  sched <- sched %>%
+    mutate_at(c("season", "round"), as.integer) %>%
+    mutate(time = gsub("z", "", .data$time),
+           datetime = ymd_hms(paste(.data$date, .data$time))) %>%
+    select(-.data$date, -.data$time)
+  sched
 
 }
