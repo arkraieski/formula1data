@@ -4,3 +4,6 @@
 .Ruserdata
 derby.log
 logs
+f1_db*
+
+f1db_csv/*

@@ -1,2 +1,5 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+f1db_csv/*
+f1_db.duckdb*
+f1_db.sqlite

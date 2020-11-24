@@ -2,24 +2,24 @@
 % Please edit documentation in R/db.R
 \name{F1dbConnect}
 \alias{F1dbConnect}
-\title{Connect to an existing F1 SQLite database
-Establishes a connection to a SQLite database previously created by \code{\link{createF1db}}.}
+\title{Connect to an existing F1 database
+Establishes a connection to a 'DuckDB' or 'SQLite' database previously created by \code{\link{createF1db}}.}
 \usage{
-F1dbConnect(file = "f1_db.sqlite")
+F1dbConnect(file = "f1_db.duckdb")
 }
 \arguments{
 \item{file}{path to the database file}
 }
 \value{
-an object of class \code{\link[RSQLite:SQLiteConnection-class]{SQLiteConnection}}
+an object of class \code{\link[duckdb:dbConnect,duckdb_driver-method]{duckdb_connection}} or \code{\link[RSQLite:SQLiteConnection-class]{SQLiteConnection}}
 }
 \description{
-Connect to an existing F1 SQLite database
-Establishes a connection to a SQLite database previously created by \code{\link{createF1db}}.
+Connect to an existing F1 database
+Establishes a connection to a 'DuckDB' or 'SQLite' database previously created by \code{\link{createF1db}}.
 }
 \examples{
 \donttest{
-# a file "f1_db.sqlite" already exists in the working directory
+# a file "f1_db.duckdb" already exists in the working directory
 con <- F1dbConnect()
 dbListFields(con)
 circuits <- dbReadTable(con, "circuits")

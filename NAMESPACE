@@ -7,4 +7,5 @@ importFrom(tidyr, unnest)
 importFrom(rlang, .data, caller_env)
 import(DBI)
 importFrom("utils", "download.file", "read.csv", "unzip")
+import(duckdb)
 
