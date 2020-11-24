@@ -66,8 +66,6 @@ getPitStopsByRace <- function(year, race){
 }
 
 
-# this function results in a dataframe with nested dataframe columns for Driver and Constructor
-# I am leaving the dataframe like this so that the user can clean and keep/discard data according to their needs
 
 #' Get a data.frame of race results for a Formula 1 Grand Prix
 #' @param year a four digit integer
@@ -81,6 +79,10 @@ getRaceResults <- function(year, race){
   int_vars <- c("number", "position", "points", "grid")
   results <- results %>%
     mutate_at(int_vars, .funs = as.integer)
+
+  results$driverId <- results$Driver$driverId
+  results$constructorId <- results$Constructor$constructorId
+
   results
 }
 
