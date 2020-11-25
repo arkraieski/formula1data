@@ -16,7 +16,7 @@ If NULL, the files will be downloaded and placed in a directory within the worki
 \item{type}{"duckdb" or "sqlite"}
 }
 \value{
-an object of class \code{\link[duckdb:dbConnect,duckdb_driver-method]{duckdb_connection}} or \code{\link[RSQLite:SQLiteConnection-class]{SQLiteConnection}}
+an object of class \code{\link[duckdb:duckdb_connection-class]{duckdb_connection}} or \code{\link[RSQLite:SQLiteConnection-class]{SQLiteConnection}}
 }
 \description{
 Create an F1 database

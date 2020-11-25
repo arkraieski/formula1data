@@ -21,7 +21,7 @@ downloadErgastCSV <- function(destfile = paste0(getwd(), "/f1db_csv")){
 #' The database will be located in a file 'f1_db.duckdb' 'f1_db.sqlite' within the working directory.
 #'
 #' Databases created with this function can be interacted with using functions from the 'DBI' Package. You can also use the convenience function \code{\link{F1dbConnect}} to reconnect to a database created by \code{createF1db}
-#' @return an object of class \code{\link[duckdb:dbConnect,duckdb_driver-method]{duckdb_connection}} or \code{\link[RSQLite:SQLiteConnection-class]{SQLiteConnection}}
+#' @return an object of class \code{\link[duckdb:duckdb_connection-class]{duckdb_connection}} or \code{\link[RSQLite:SQLiteConnection-class]{SQLiteConnection}}
 #' @examples \donttest{
 #' library(DBI)
 #' con <- createF1db()
@@ -158,7 +158,7 @@ createF1db <- function(csv_dir = NULL, rm_csv = FALSE, type = "duckdb"){
 #' Connect to an existing F1 database
 #' Establishes a connection to a 'DuckDB' or 'SQLite' database previously created by \code{\link{createF1db}}.
 #' @param file path to the database file
-#' @return an object of class \code{\link[duckdb:dbConnect,duckdb_driver-method]{duckdb_connection}} or \code{\link[RSQLite:SQLiteConnection-class]{SQLiteConnection}}
+#' @return an object of class \code{\link[duckdb:duckdb_connection-class]{duckdb_connection}} or \code{\link[RSQLite:SQLiteConnection-class]{SQLiteConnection}}
 #' @examples \donttest{
 #' # a file "f1_db.duckdb" already exists in the working directory
 #' con <- F1dbConnect()

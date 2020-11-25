@@ -11,7 +11,7 @@ F1dbConnect(file = "f1_db.duckdb")
 \item{file}{path to the database file}
 }
 \value{
-an object of class \code{\link[duckdb:dbConnect,duckdb_driver-method]{duckdb_connection}} or \code{\link[RSQLite:SQLiteConnection-class]{SQLiteConnection}}
+an object of class \code{\link[duckdb:duckdb_connection-class]{duckdb_connection}} or \code{\link[RSQLite:SQLiteConnection-class]{SQLiteConnection}}
 }
 \description{
 Connect to an existing F1 database
