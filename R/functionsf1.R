@@ -207,8 +207,9 @@ getF1Schedule <- function(year){
   sched <- sched %>%
     mutate_at(c("season", "round"), as.integer) %>%
     mutate(time = gsub("z", "", .data$time),
-           datetime = ymd_hms(paste(.data$date, .data$time))) %>%
-    select(-.data$date, -.data$time)
+           datetime = ymd_hms(paste(.data$date, .data$time)),
+           date = ymd(.data$date)) %>%
+    select(-.data$time)
   sched
 
 }
