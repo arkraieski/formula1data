@@ -2,8 +2,7 @@
 % Please edit documentation in R/db.R
 \name{createF1db}
 \alias{createF1db}
-\title{Create an F1 database
-Creates a local 'DuckDB' or 'SQLite' database using the latest 'Ergast' data and establish a connection.}
+\title{Create an F1 database}
 \usage{
 createF1db(csv_dir = NULL, rm_csv = FALSE, type = "duckdb")
 }
@@ -19,7 +18,6 @@ If NULL, the files will be downloaded and placed in a directory within the worki
 an object of class \code{\link[duckdb:duckdb_connection-class]{duckdb_connection}} or \code{\link[RSQLite:SQLiteConnection-class]{SQLiteConnection}}
 }
 \description{
-Create an F1 database
 Creates a local 'DuckDB' or 'SQLite' database using the latest 'Ergast' data and establish a connection.
 }
 \details{

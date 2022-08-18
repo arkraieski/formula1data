@@ -2,8 +2,7 @@
 % Please edit documentation in R/db.R
 \name{downloadErgastCSV}
 \alias{downloadErgastCSV}
-\title{Download 'Ergast' CSV Database Tables
-This function downloads the 'Ergast' database as a set of CSV files and unzips them into a local directory}
+\title{Download 'Ergast' CSV Database Tables}
 \usage{
 downloadErgastCSV(destfile = paste0(getwd(), "/f1db_csv"))
 }
@@ -11,7 +10,6 @@ downloadErgastCSV(destfile = paste0(getwd(), "/f1db_csv"))
 \item{destfile}{a character string with the name of the directory in which the files are saved}
 }
 \description{
-Download 'Ergast' CSV Database Tables
 This function downloads the 'Ergast' database as a set of CSV files and unzips them into a local directory
 }
 \details{

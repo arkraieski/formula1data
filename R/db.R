@@ -1,4 +1,5 @@
 #' Download 'Ergast' CSV Database Tables
+#'
 #' This function downloads the 'Ergast' database as a set of CSV files and unzips them into a local directory
 #' @param destfile a character string with the name of the directory in which the files are saved
 #' @details The CSV files downloaded by this function have column headers and are UTF-8 encoded. Each file contains a database table.
@@ -12,6 +13,7 @@ downloadErgastCSV <- function(destfile = paste0(getwd(), "/f1db_csv")){
 
 
 #' Create an F1 database
+#'
 #' Creates a local 'DuckDB' or 'SQLite' database using the latest 'Ergast' data and establish a connection.
 #' @param csv_dir either NULL or the name of a directory containing csv files from Ergast.
 #' If NULL, the files will be downloaded and placed in a directory within the working directory named "/f1db_csv"
@@ -156,6 +158,7 @@ createF1db <- function(csv_dir = NULL, rm_csv = FALSE, type = "duckdb"){
 }
 
 #' Connect to an existing F1 database
+#'
 #' Establishes a connection to a 'DuckDB' or 'SQLite' database previously created by \code{\link{createF1db}}.
 #' @param file path to the database file
 #' @return an object of class \code{\link[duckdb:duckdb_connection-class]{duckdb_connection}} or \code{\link[RSQLite:SQLiteConnection-class]{SQLiteConnection}}
