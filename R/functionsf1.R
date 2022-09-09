@@ -86,6 +86,33 @@ getRaceResults <- function(year, race){
   results
 }
 
+getSprintResults <- function(year, race){
+  url <- paste0("https://ergast.com/api/f1/", year, "/", race, "/sprint.json")
+  sprint <- fromJSON(content(GET(url), as = "text"))$MRData$RaceTable$Races$SprintResult[[1]]
+  sprint
+
+  # extract driverId from nested df column
+  sprint$driverId <- sprint$Driver$driverId
+  sprint <- sprint %>% select(-.data$Driver)
+  # extract constructorId from nested df column
+  sprint$constructorId <- sprint$Constructor$constructorId
+  sprint <- sprint %>% select(-.data$Constructor)
+
+  int_vars <- c("number", "position", "points", "grid", "laps")
+
+  sprint <- sprint %>% mutate_at(int_vars, as.integer)
+
+  # parse finishing time from "millis" column in "Time" nested df
+  sprint$time <- format( as.POSIXct(Sys.Date()) + as.integer(sprint$Time$millis)/1000, "%M:%S") # note capitalization
+  sprint <- sprint %>% select(-.data$Time)
+
+  sprint$fastestLap <- sprint$FastestLap$lap
+  sprint$fastestLapTime <- ms(sprint$FastestLap$Time$time)
+  sprint <- sprint %>% select(-.data$FastestLap)
+
+  sprint
+}
+
 #' Get a data.frame of qualifying results for a Formula 1 Grand Prix
 #' @param year a four digit integer
 #' @param race a 1 or 2 digit integer indicating which round of the season
