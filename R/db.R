@@ -59,16 +59,19 @@ createF1db <- function(csv_dir = NULL, rm_csv = FALSE, type = "duckdb"){
                            fileEncoding = "UTF-8")
       write_table(con, tbl = circuits)
       constructor_results <- read.csv(paste0(csv_dir, "/constructor_results.csv"),
-                                      colClasses = c(rep("integer", 3), "numeric", "character"))
+                                      colClasses = c(rep("integer", 3), "numeric", "character"),
+                                      na.strings = "\\N")
       write_table(con, tbl = constructor_results)
       constructor_standings <- read.csv(paste0(csv_dir, "/constructor_standings.csv"),
-                                        colClasses = c(rep("integer", 3), "numeric", "integer", "character", "integer"))
+                                        colClasses = c(rep("integer", 3), "numeric", "integer", "character", "integer"),
+                                        na.strings = "\\N")
       write_table(con, tbl = constructor_standings)
       constructors <- read.csv(paste0(csv_dir, "/constructors.csv"),
-                               colClasses = c("integer", rep("character", 4)))
+                               colClasses = c("integer", rep("character", 4)), na.strings = "\\N")
       write_table(con, tbl = constructors)
       driver_standings <- read.csv(paste0(csv_dir, "/driver_standings.csv"),
-                                   colClasses = c(rep("integer", 3), "numeric", "integer", "character", "integer"))
+                                   colClasses = c(rep("integer", 3), "numeric", "integer", "character", "integer"),
+                                   na.strings = "\\N")
       write_table(con, tbl = driver_standings)
       drivers <- read.csv(paste0(csv_dir, "/drivers.csv"),
                           colClasses = c("integer", "character", "integer", rep("character", 3), "Date", rep("character", 2)),
@@ -76,31 +79,39 @@ createF1db <- function(csv_dir = NULL, rm_csv = FALSE, type = "duckdb"){
                           fileEncoding = "UTF-8")
       write_table(con, tbl = drivers)
       lap_times <- read.csv(paste0(csv_dir, "/lap_times.csv"),
-                            colClasses = c(rep("integer", 4), "character", "integer"))
+                            colClasses = c(rep("integer", 4), "character", "integer"), na.strings = "\\N")
       write_table(con, tbl = lap_times)
       pit_stops <- read.csv(paste0(csv_dir, "/pit_stops.csv"),
-                            colClasses = c(rep("integer", 4), "character", "character", "integer"))
+                            colClasses = c(rep("integer", 4), "character", "character", "integer"),
+                            na.strings = "\\N")
       write_table(con, tbl = pit_stops)
       qualifying <- read.csv(paste0(csv_dir, "/qualifying.csv"),
                              colClasses = c(rep("integer", 6), rep("character", 3)),
                              na.strings = "\\N")
       write_table(con, tbl = qualifying)
       races <- read.csv(paste0(csv_dir, "/races.csv"),
-                        colClasses = c(rep("integer", 4), "character", "character", "character", "character"))
+                        colClasses = c(rep("integer", 4), rep("character", 14)), na.strings = "\\N")
       write_table(con, tbl = races)
       results <- read.csv(paste0(csv_dir, "/results.csv"),
                           colClasses = c(rep("integer", 7), "character", "integer", "numeric", "integer",
                                          "character", rep("integer", 3), rep("character", 2), "integer"),
                           na.strings = "\\N")
       write_table(con, tbl = results)
+
       seasons <- read.csv(paste0(csv_dir, "/seasons.csv"),
                           colClasses = c("integer", "character"))
       write_table(con, tbl = seasons)
+      sprint_results <- read.csv(paste0(csv_dir, "/sprint_results.csv"),
+                                 colClasses = c(rep("integer", 7), "character", "integer", "numeric", "integer",
+                                                "character", rep("integer", 2), "character", "integer"),
+                                 na.strings = "\\N")
+      write_table(con, tbl = sprint_results)
       status <- read.csv(paste0(csv_dir, "/status.csv"),
                          colClasses = c("integer", "character"))
       write_table(con, tbl = status)
     },
     error = function(e) {
+      message(dbListTables(con))
       dbDisconnect(con)
       unlink("f1_db.sqlite")
       stop(e)
@@ -120,10 +131,12 @@ createF1db <- function(csv_dir = NULL, rm_csv = FALSE, type = "duckdb"){
                   lap_times = c(rep("integer", 4), "character", "integer"),
                   pit_stops = c(rep("integer", 4), "character", "character", "integer"),
                   qualifying =  c(rep("integer", 6), rep("character", 3)),
-                  races =  c(rep("integer", 4), "character", "Date", "character", "character"),
+                  races =  c(rep("integer", 4), rep("character", 14)),
                   results = c(rep("integer", 7), "character", "integer", "numeric", "integer",
                               "character", rep("integer", 3), rep("character", 2), "integer"),
                   seasons = c("integer", "character"),
+                  sprint_results = c(rep("integer", 7), "character", "integer", "numeric", "integer",
+                                     "character", rep("integer", 2), "character", "integer"),
                   status = c("integer", "character"))
 
     tryCatch(
@@ -162,7 +175,7 @@ createF1db <- function(csv_dir = NULL, rm_csv = FALSE, type = "duckdb"){
 #' Establishes a connection to a 'DuckDB' or 'SQLite' database previously created by \code{\link{createF1db}}.
 #' @param file path to the database file
 #' @return an object of class \code{\link[duckdb:duckdb_connection-class]{duckdb_connection}} or \code{\link[RSQLite:SQLiteConnection-class]{SQLiteConnection}}
-#' @examples \donttest{
+#' @examples \dontrun{
 #' # a file "f1_db.duckdb" already exists in the working directory
 #' con <- F1dbConnect()
 #' dbListFields(con)
