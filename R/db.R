@@ -175,7 +175,7 @@ createF1db <- function(csv_dir = NULL, rm_csv = FALSE, type = "duckdb"){
 #' Establishes a connection to a 'DuckDB' or 'SQLite' database previously created by \code{\link{createF1db}}.
 #' @param file path to the database file
 #' @return an object of class \code{\link[duckdb:duckdb_connection-class]{duckdb_connection}} or \code{\link[RSQLite:SQLiteConnection-class]{SQLiteConnection}}
-#' @examples \donttest{
+#' @examples \dontrun{
 #' # a file "f1_db.duckdb" already exists in the working directory
 #' con <- F1dbConnect()
 #' dbListFields(con)

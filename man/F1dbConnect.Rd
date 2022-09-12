@@ -16,7 +16,7 @@ an object of class \code{\link[duckdb:duckdb_connection-class]{duckdb_connection
 Establishes a connection to a 'DuckDB' or 'SQLite' database previously created by \code{\link{createF1db}}.
 }
 \examples{
-\donttest{
+\dontrun{
 # a file "f1_db.duckdb" already exists in the working directory
 con <- F1dbConnect()
 dbListFields(con)
