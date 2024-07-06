@@ -1,5 +1,5 @@
 exportPattern("^[[:alpha:]]+")
-importFrom(httr, GET, content)
+importFrom(httr, GET, content, stop_for_status)
 importFrom(lubridate, ms, minute, second, hms, ymd_hms, ymd)
 importFrom(jsonlite, fromJSON)
 import(dplyr)
