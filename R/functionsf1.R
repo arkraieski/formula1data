@@ -152,6 +152,7 @@ getQualifyingResults <- function(year, race){
     seconds <- 60 * minute(time) + second(time)
     seconds}
 
+  qualy <- fillMissingQualifyingColumns(qualy) # for years before q2, q3, etc. were introduced
   qualy <- qualy %>%
     select(-.data$number) %>%
     mutate(position = as.integer(.data$position),
@@ -262,4 +263,58 @@ getF1Schedule <- function(year){
     select(-.data$time)
   sched
 
+}
+
+#' Get a data.frame of Formula 1 qualifying results for a specific constructor for a given year
+#' @param year a four digit integer
+#' @param constructor a string containing an 'Ergast' constructorId, usually the constructor's name in all lowercase
+#' @examples \donttest{mercedes_qualy_2018 <- getConstructorQualifying(2018, "mercedes")}
+getConstructorQualifying <- function(year, constructor){
+
+  ergast_url <- "https://ergast.com/api/f1/"
+  request_url <- paste0(ergast_url,
+                        year,
+                        "/constructors/",
+                        constructor,
+                        "/qualifying.json?limit=60") # hopefully limit is enough for a while
+
+  response <- GET(request_url)
+  stop_for_status(response)
+
+
+  qualy_data <- fromJSON(content(response, as = "text"))$MRData$RaceTable$Races
+
+  qualy_data <- qualy_data %>%
+    unnest(.data$QualifyingResults,
+           names_repair = "universal")
+
+  char_ms_to_seconds <- function(x){
+    time <- ms(x)
+    seconds <- 60 * minute(time) + second(time)
+    seconds
+  }
+
+  qualy_data <- fillMissingQualifyingColumns(qualy_data) # for years before q2, q3, etc. were introduced
+  qualy_data <- qualy_data %>%
+    mutate_at(c("season", "round"), as.integer) %>%
+    mutate_at(c("Q1", "Q2", "Q3"), char_ms_to_seconds)
+
+  qualy_data$Driver <- qualy_data$Driver$driverId
+
+
+
+  qualy_data
+}
+
+#' Detect when a data.frame doesn't have Q2 and Q3 Columns and fill them with NA
+#' @param df a data.frame
+#' @NoRd
+fillMissingQualifyingColumns <- function(df){
+  if(!"Q2" %in% colnames(df)){
+    df$Q2 <- NA
+  }
+  if(!"Q3" %in% colnames(df)){
+    df$Q3 <- NA
+  }
+  df
 }
