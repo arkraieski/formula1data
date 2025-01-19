@@ -1,10 +1,10 @@
 Package: formula1data
 Type: Package
 Title: Imports Formula 1 Data using the 'Ergast' API
-Version: 0.3.0
+Version: 0.3.1
 Author: Alex Kraieski
 Maintainer: Alex Kraieski <arkraieski@gmail.com>
-Description: An R wrapper for the 'Ergast' API. It has functions to import Formula 1 lap times, pit stops, qualifying results, race results, and championship standings.
+Description: An R wrapper for the 'jolpica' API. It has functions to import Formula 1 lap times, pit stops, qualifying results, race results, and championship standings.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

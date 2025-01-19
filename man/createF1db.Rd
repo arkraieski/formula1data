@@ -32,5 +32,7 @@ library(DBI)
 con <- createF1db()
 dbListTables(con)
 dbDisconnect(con)
+unlink("f1_db.duckdb")
+unlink('f1db_csv', recursive = TRUE)
 }
 }

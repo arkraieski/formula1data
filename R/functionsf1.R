@@ -1,20 +1,31 @@
+
 #' Get a data.frame of all lap times for a specific Formula 1 Grand Prix
 #' @param year a four digit integer
 #' @param race a 1 or 2 digit integer indicating which round of the season
 #' @examples \donttest{aus_laps_2018 <- getLapsByRace(2018, 1)}
+#' @importFrom httr GET content stop_for_status
+#' @importFrom lubridate ms minute second hms ymd_hms ymd
+#' @importFrom jsonlite fromJSON
+#' @import dplyr
+#' @importFrom tidyr unnest
+#' @importFrom rlang .data caller_env
+#' @import DBI
+#' @import duckdb
+#' @importFrom "utils" "download.file" "read.csv" "unzip"
+#' @export
 getLapsByRace <- function(year, race){
-  url1 <- paste0("https://ergast.com/api/f1/", year, "/", race, "/laps.json")
+  url1 <- paste0("https://api.jolpi.ca/ergast/f1/", year, "/", race, "/laps.json")
   laps1 <- GET(url1)
   stop_for_status(laps1)
-  laps1 <- fromJSON(content(laps1, as = "text"))
+  laps1 <- fromJSON(content(laps1, as = "text", encoding = "UTF-8"))
   limit <- as.integer(laps1$MRData$total) - 30 # this is used to determine how many records to request in second api call
   laps1 <- laps1$MRData$RaceTable$Races$Laps[[1]]
 
 
-  url2 <- paste0("https://ergast.com/api/f1/", year, "/", race, "/laps.json?offset=30&limit=", limit)
+  url2 <- paste0("https://api.jolpi.ca/ergast/f1/", year, "/", race, "/laps.json?offset=30&limit=", limit)
   laps2 <- GET(url2)
   stop_for_status(laps2)
-  laps2 <- fromJSON(content(laps2, as = "text"))$MRData$RaceTable$Races$Laps[[1]]
+  laps2 <- fromJSON(content(laps2, as = "text", encoding = "UTF-8"))$MRData$RaceTable$Races$Laps[[1]]
 
   laps <- bind_rows(laps1, laps2) %>% unnest(.data$Timings) %>%
     mutate(lap = as.integer(.data$number), position = as.integer(.data$position)) %>%
@@ -30,18 +41,19 @@ getLapsByRace <- function(year, race){
 #' @param race a 1 or 2 digit integer indicating which round of the season
 #' @param driverId string containing an 'Ergast' driverId, usually the driver's last name in all lowercase
 #' @examples \donttest{vettel_laps_aus_2011 <- getDriverLaps(2011, 1, driverId = "vettel")}
+#' @export
 getDriverLaps <- function(year, race, driverId){
-  url1 <- paste0("https://ergast.com/api/f1/", year, "/", race, "/drivers/", driverId, "/laps.json")
+  url1 <- paste0("https://api.jolpi.ca/ergast/f1/", year, "/", race, "/drivers/", driverId, "/laps.json")
   laps1 <- GET(url1)
   stop_for_status(laps1)
-  laps1 <- fromJSON(content(laps1, as = "text"))
+  laps1 <- fromJSON(content(laps1, as = "text", encoding = "UTF-8"))
   limit <- as.integer(laps1$MRData$total) - 30
   laps1 <- laps1$MRData$RaceTable$Races$Laps[[1]]
 
-  url2 <-paste0("https://ergast.com/api/f1/", year, "/", race, "/drivers/", driverId, "/laps.json?offset=30&limit=", limit)
+  url2 <-paste0("https://api.jolpi.ca/ergast/f1/", year, "/", race, "/drivers/", driverId, "/laps.json?offset=30&limit=", limit)
   laps2 <- GET(url2)
   stop_for_status(laps2)
-  laps2 <- fromJSON(content(laps2, as = "text"))$MRData$RaceTable$Races$Laps[[1]]
+  laps2 <- fromJSON(content(laps2, as = "text", encoding = "UTF-8"))$MRData$RaceTable$Races$Laps[[1]]
 
   laps <- bind_rows(laps1, laps2) %>%
     unnest(.data$Timings) %>%
@@ -57,9 +69,10 @@ getDriverLaps <- function(year, race, driverId){
 #' @param year a four digit integer
 #' @param race a 1 or 2 digit integer indicating which round of the season
 #' @examples \donttest{aus_pitstops_2018 <- getPitStopsByRace(2018, 1)}
+#' @export
 getPitStopsByRace <- function(year, race){
-  url <- paste0("http://ergast.com/api/f1/", year, "/", race, "/pitstops.json?limit=100")
-  pitstops <- fromJSON(content(GET(url), as = "text"))$MRData$RaceTable$Races$PitStops[[1]]
+  url <- paste0("https://api.jolpi.ca/ergast/f1/", year, "/", race, "/pitstops.json?limit=100")
+  pitstops <- fromJSON(content(GET(url), as = "text", encoding = "UTF-8"))$MRData$RaceTable$Races$PitStops[[1]]
   pitstops <- pitstops %>%
     mutate(time = hms(.data$time),
            duration = as.numeric(.data$duration)) %>%
@@ -73,8 +86,9 @@ getPitStopsByRace <- function(year, race){
 #' @param year a four digit integer
 #' @param race a 1 or 2 digit integer indicating which round of the season
 #' @examples \donttest{aus_results_2018 <- getRaceResults(2018, 1)}
+#' @export
 getRaceResults <- function(year, race){
-  url <- paste0("https://ergast.com/api/f1/", year, "/", race, "/results.json?limit=50")
+  url <- paste0("https://api.jolpi.ca/ergast/f1/", year, "/", race, "/results.json?limit=50")
   response <- GET(url)
   stop_for_status(response)
   results <- fromJSON(content(response, as = "text"))$MRData$RaceTable$Races$Results[[1]]
@@ -98,8 +112,9 @@ getRaceResults <- function(year, race){
 #' # Sprint Qualifying results for the 2021 British Grand Prix
 #' uk_sprint32 <- getSprintResults(2021, 10)
 #' }
+#' @export
 getSprintResults <- function(year, race){
-  url <- paste0("https://ergast.com/api/f1/", year, "/", race, "/sprint.json")
+  url <- paste0("https://api.jolpi.ca/ergast/f1/", year, "/", race, "/sprint.json")
   response <- GET(url)
   stop_for_status(response)
   sprint <- fromJSON(content(response, as = "text"))$MRData$RaceTable$Races$SprintResult[[1]]
@@ -132,8 +147,9 @@ getSprintResults <- function(year, race){
 #' @param year a four digit integer
 #' @param race a 1 or 2 digit integer indicating which round of the season
 #' @examples \donttest{aus_qualy_2018 <- getQualifyingResults(2018, 1)}
+#' @export
 getQualifyingResults <- function(year, race){
-  url <- paste0("http://ergast.com/api/f1/", year, "/", race, "/qualifying.json?limit=100")
+  url <- paste0("https://api.jolpi.ca/ergast/f1/", year, "/", race, "/qualifying.json?limit=100")
   response <- GET(url)
   stop_for_status(response)
   qualy <- fromJSON(content(response, as = "text"))$MRData$RaceTable$Races$Qualifying[[1]]
@@ -166,12 +182,12 @@ getQualifyingResults <- function(year, race){
 #' Get a data.frame of Formula 1 World Championship final standings for a season
 #' @param year a four digit integer
 #' @param type constructor or driver
-#' @examples
-#' \donttest{driver_standings_2012 <- getFinalF1Standings(2012, type = "driver")
+#' @export
+#' @examples \donttest{driver_standings_2012 <- getFinalF1Standings(2012, type = "driver")
 #' constructor_standings_2012 <- getFinalF1Standings(2012, type = "constructor")}
 getFinalF1Standings <- function(year, type = "driver"){
   if(type == "driver"){
-    url <- paste0("http://ergast.com/api/f1/", year,"/driverStandings.json?limit=100")
+    url <- paste0("https://api.jolpi.ca/ergast/f1/", year,"/driverStandings.json?limit=100")
     response <- GET(url)
     stop_for_status(response)
     standings <- fromJSON(content(response, as = "text"))$MRData$StandingsTable$StandingsLists$DriverStandings[[1]]
@@ -186,7 +202,7 @@ getFinalF1Standings <- function(year, type = "driver"){
     standings
   }
   else if(type == "constructor"){
-    url <- paste0("http://ergast.com/api/f1/", year,"/constructorStandings.json?limit=100")
+    url <- paste0("https://api.jolpi.ca/ergast/f1/", year,"/constructorStandings.json?limit=100")
     standings <- fromJSON(content(GET(url), as = "text"))$MRData$StandingsTable$StandingsLists$ConstructorStandings[[1]]
 
     # extract constructorId from nested df column
@@ -208,11 +224,11 @@ getFinalF1Standings <- function(year, type = "driver"){
 #' @param year a four digit integer
 #' @param race a 1 or 2 digit integer indicating which round of the season
 #' @param type constructor or driver
-#' @examples
-#' \donttest{round2_driver_standings_2012 <- getF1StandingsAfterRace(2012, 2, type = "driver")}
+#' @export
+#' @examples \donttest{round2_driver_standings_2012 <- getF1StandingsAfterRace(2012, 2, type = "driver")}
 getF1StandingsAfterRace <- function(year, race, type = "driver"){
   if(type == "driver"){
-    url <- paste0("http://ergast.com/api/f1/", year,"/", race, "/driverStandings.json?limit=100")
+    url <- paste0("https://api.jolpi.ca/ergast/f1/", year,"/", race, "/driverStandings.json?limit=100")
     response <- GET(url)
     stop_for_status(response)
     standings <- fromJSON(content(response, as = "text"))$MRData$StandingsTable$StandingsLists$DriverStandings[[1]]
@@ -227,7 +243,7 @@ getF1StandingsAfterRace <- function(year, race, type = "driver"){
     standings
   }
   else if(type == "constructor"){
-    url <- paste0("http://ergast.com/api/f1/", year, "/", race, "/constructorStandings.json?limit=100")
+    url <- paste0("https://api.jolpi.ca/ergast/f1/", year, "/", race, "/constructorStandings.json?limit=100")
     standings <- fromJSON(content(GET(url), as = "text"))$MRData$StandingsTable$StandingsLists$ConstructorStandings[[1]]
 
     # extract constructorId from nested df column
@@ -250,8 +266,9 @@ getF1StandingsAfterRace <- function(year, race, type = "driver"){
 #' @examples \donttest{
 #' schedule_2019 <- getF1Schedule(2020)
 #' }
+#' @export
 getF1Schedule <- function(year){
-  url <- paste0("https://ergast.com/api/f1/", year, ".json")
+  url <- paste0("https://api.jolpi.ca/ergast/f1/", year, ".json")
   response <- GET(url)
   stop_for_status(response)
   sched <- fromJSON(content(response, as = "text"))$MRData$RaceTable$Races
@@ -269,9 +286,10 @@ getF1Schedule <- function(year){
 #' @param year a four digit integer
 #' @param constructor a string containing an 'Ergast' constructorId, usually the constructor's name in all lowercase
 #' @examples \donttest{mercedes_qualy_2018 <- getConstructorQualifying(2018, "mercedes")}
+#' @export
 getConstructorQualifying <- function(year, constructor){
 
-  ergast_url <- "https://ergast.com/api/f1/"
+  ergast_url <- "https://api.jolpi.ca/ergast/f1/"
   request_url <- paste0(ergast_url,
                         year,
                         "/constructors/",
@@ -308,7 +326,7 @@ getConstructorQualifying <- function(year, constructor){
 
 #' Detect when a data.frame doesn't have Q2 and Q3 Columns and fill them with NA
 #' @param df a data.frame
-#' @NoRd
+#' @noRd
 fillMissingQualifyingColumns <- function(df){
   if(!"Q2" %in% colnames(df)){
     df$Q2 <- NA
