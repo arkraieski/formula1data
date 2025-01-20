@@ -13,27 +13,54 @@
 #' @import duckdb
 #' @importFrom "utils" "download.file" "read.csv" "unzip"
 #' @export
-getLapsByRace <- function(year, race){
-  url1 <- paste0("https://api.jolpi.ca/ergast/f1/", year, "/", race, "/laps.json")
-  laps1 <- GET(url1)
-  stop_for_status(laps1)
-  laps1 <- fromJSON(content(laps1, as = "text", encoding = "UTF-8"))
-  limit <- as.integer(laps1$MRData$total) - 30 # this is used to determine how many records to request in second api call
-  laps1 <- laps1$MRData$RaceTable$Races$Laps[[1]]
+getLapsByRace <- function(year, race) {
+  base_url <- "https://api.jolpi.ca/ergast/f1"
 
+  # First, get the total number of laps so we know how many requests are needed
+  initial_url <- paste0(base_url, "/", year, "/", race, "/laps.json?limit=1")
+  initial_resp <- GET(initial_url)
+  stop_for_status(initial_resp)
 
-  url2 <- paste0("https://api.jolpi.ca/ergast/f1/", year, "/", race, "/laps.json?offset=30&limit=", limit)
-  laps2 <- GET(url2)
-  stop_for_status(laps2)
-  laps2 <- fromJSON(content(laps2, as = "text", encoding = "UTF-8"))$MRData$RaceTable$Races$Laps[[1]]
+  initial_data <- fromJSON(content(initial_resp, as = "text", encoding = "UTF-8"))
+  total_records <- as.integer(initial_data$MRData$total)
 
-  laps <- bind_rows(laps1, laps2) %>% unnest(.data$Timings) %>%
-    mutate(lap = as.integer(.data$number), position = as.integer(.data$position)) %>%
+  # Build a sequence of offsets in steps of 100
+  offsets <- seq(0, total_records - 1, by = 100)
+
+  laps_list <- list()
+
+  for (offset in offsets) {
+    # Construct the URL with the current offset and a limit of 100
+    url <- paste0(base_url, "/", year, "/", race, "/laps.json?offset=", offset, "&limit=100")
+
+    resp <- GET(url)
+    stop_for_status(resp)
+
+    # Parse the JSON and pull out the Laps node
+    content_json <- fromJSON(content(resp, as = "text", encoding = "UTF-8"))
+    laps_data <- content_json$MRData$RaceTable$Races$Laps[[1]]
+
+    if (!is.null(laps_data)) {
+      laps_list[[length(laps_list) + 1]] <- laps_data
+    }
+
+    # Throttle: wait 0.25 seconds between requests
+    Sys.sleep(0.25)
+  }
+
+  # Combine all data frames and clean up
+  laps <- bind_rows(laps_list) %>%
+    unnest(.data$Timings) %>%
+    mutate(
+      lap      = as.integer(.data$number),
+      position = as.integer(.data$position)
+    ) %>%
     select(-.data$number)
 
   laps$time <- ms(laps$time)
-  laps$seconds <- 60*minute(laps$time) + second(laps$time)
-  laps
+  laps$seconds <- 60 * minute(laps$time) + second(laps$time)
+
+  return(laps)
 }
 
 #' Get a data.frame of a specific driver's lap times in a Formula 1 Grand Prix
