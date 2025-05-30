@@ -131,6 +131,26 @@ getRaceResults <- function(year, race){
   results
 }
 
+#' Get a data.frame of results for a Formula 1 season for a given position
+#' @param year a four digit integer
+#' @param position a 1 or 2 digit integer indicating which position to filter results by
+#' @examples \donttest{winners_2019 <- getResultsByPosition(2019, 1)}
+#' @export
+getResultsByPosition <- function(year, position = 1){
+  url <- paste0("https://api.jolpi.ca/ergast/f1/", year, "/results/", position, '.json')
+  response <- GET(url)
+  stop_for_status(response)
+  results <- fromJSON(content(response, as = "text"))$MRData$RaceTable$Races$Results %>%
+    bind_rows()
+  # convert appropriate columns to integer
+  int_vars <- c("number", "position", "points", "grid")
+  results <- results %>%
+    mutate_at(int_vars, .funs = as.integer)
+  results$driverId <- results$Driver$driverId
+  results$constructorId <- results$Constructor$constructorId
+
+  results
+}
 
 #' Get a data.frame of results for an F1 Sprint Qualifying session
 #' @param year a four digit integer
