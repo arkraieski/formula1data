@@ -141,7 +141,8 @@ getResultsByPosition <- function(year, position = 1){
   response <- GET(url)
   stop_for_status(response)
   results <- fromJSON(content(response, as = "text"))$MRData$RaceTable$Races$Results %>%
-    bind_rows()
+    bind_rows() %>%
+    mutate(round = row_number())
   # convert appropriate columns to integer
   int_vars <- c("number", "position", "points", "grid")
   results <- results %>%
